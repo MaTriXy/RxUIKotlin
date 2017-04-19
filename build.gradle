@@ -1,5 +1,11 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'org.jetbrains.dokka-android'
+
+ext {
+    libVersion = "1.0.0-RC1"
+}
 
 android {
     compileSdkVersion 25
@@ -9,7 +15,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName libVersion
     }
     buildTypes {
         release {
@@ -24,8 +30,42 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:25.3.1'
-    provided 'com.android.support:recyclerview-v7:25.3.1'
-    compile "io.reactivex.rxjava2:rxjava:2.0.8"
+    compile 'io.reactivex.rxjava2:rxjava:2.0.8'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 }
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+publish {
+    bintrayUser = 'vincentmasselis'
+    groupId = 'com.vincentmasselis'
+    artifactId = 'rx-ui-kotlin'
+    publishVersion = libVersion
+    autoPublish = false
+}
+
+dokka {
+    moduleName = 'RxUIKotlin'
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/libs"
+    processConfigurations = ['compile']
+    includes = ['README.md']
+    //samples = ['samples/basic.kt', 'samples/advanced.kt']
+    linkMapping {
+        dir = "src/main/kotlin"
+        url = "https://github.com/VincentMasselis/RxUIKotlin/tree/master/src/main/kotlin"
+        suffix = "#L"
+    }
+    sourceDirs = files('src/main/kotlin')
+}
+
+// Command for a new release :
+// ./gradlew :rxinterfacekotlin:clean :rxinterfacekotlin:build :rxinterfacekotlin:generatePomFileForReleasePublication :rxinterfacekotlin:sourcesJar :rxinterfacekotlin:mokka :rxinterfacekotlin:bintrayUpload -PbintrayKey=MY_API_KEY
