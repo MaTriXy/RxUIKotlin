@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.4.0'
+        classpath 'org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.14'
+    }
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.novoda.bintray-release'
@@ -68,4 +79,4 @@ dokka {
 }
 
 // Command for a new release :
-// ./gradlew :rxinterfacekotlin:clean :rxinterfacekotlin:build :rxinterfacekotlin:generatePomFileForReleasePublication :rxinterfacekotlin:sourcesJar :rxinterfacekotlin:mokka :rxinterfacekotlin:bintrayUpload -PbintrayKey=MY_API_KEY
+// ./gradlew :rxinterfacekotlin:clean :rxinterfacekotlin:build :rxinterfacekotlin:generatePomFileForReleasePublication :rxinterfacekotlin:sourcesJar :rxinterfacekotlin:dokka :rxinterfacekotlin:bintrayUpload -PbintrayKey=MY_API_KEY
